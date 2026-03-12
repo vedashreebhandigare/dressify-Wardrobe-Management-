@@ -1,0 +1,79 @@
+name: smart_wardrobe
+description: SmartWardrobe – AI Digital Closet. Organize, discover, and style your wardrobe with AI.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Navigation
+  go_router: ^13.2.0
+
+  # Local Storage
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # UI & Animations
+  google_fonts: ^6.2.1
+  flutter_animate: ^4.5.0
+  lottie: ^3.1.0
+  cached_network_image: ^3.3.1
+  flutter_staggered_grid_view: ^0.7.0
+  smooth_page_indicator: ^1.1.0
+  fl_chart: ^0.67.0
+  shimmer: ^3.0.0
+  flutter_svg: ^2.0.10+1
+
+  # Image Handling
+  image_picker: ^1.0.7
+  palette_generator: ^0.3.3+3
+
+  # Camera
+  camera: ^0.10.5+9
+
+  # Utils
+  uuid: ^4.3.3
+  intl: ^0.19.0
+  path_provider: ^2.1.3
+  shared_preferences: ^2.2.3
+  permission_handler: ^11.3.0
+  connectivity_plus: ^6.0.3
+  http: ^1.2.1
+
+  # Icons
+  cupertino_icons: ^1.0.6
+  material_symbols_icons: ^4.2719.1
+
+  # Other
+  equatable: ^2.0.5
+  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.1
+  collection: ^1.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.9
+  json_serializable: ^6.8.0
+  freezed: ^2.5.2
+  riverpod_generator: ^2.4.0
+  custom_lint: ^0.6.4
+  riverpod_lint: ^2.3.10
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/animations/
+    - assets/fonts/
