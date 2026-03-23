@@ -1,151 +1,96 @@
-#Dressify - SmartWardrobe [AI Digital Closet] 👗✨
+# Dressify – Your AI Digital Closet 👗✨
 
-A production-ready Flutter application for managing your digital wardrobe with AI-powered outfit suggestions and sustainability insights.
+[![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
+[![Material 3](https://img.shields.io/badge/Material%203-7C6FCD?style=for-the-badge&logo=material-design&logoColor=white)](https://m3.material.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-## Features
+**Dressify** is a premium, production-ready Flutter application designed to revolutionize how you interact with your wardrobe. By leveraging AI-powered outfit suggestions and deep sustainability insights, Dressify helps you make the most of what you own while reducing fashion waste.
 
-| Feature | Description |
-|---------|-------------|
-| 📸 Digital Wardrobe | Catalog clothes with photos, auto-detect via simulated AI |
-| ✨ AI Outfit Generator | Get AI-styled outfit suggestions by occasion & season |
-| 📅 Outfit History | Track what you wore and when |
-| 🌿 Sustainability Insights | Monitor wardrobe usage, find forgotten items |
-| 👤 Profile | Stats, settings, and preferences |
+---
 
-## Technology Stack
+## 🚀 Elevated Features
 
-- **Flutter 3.x** with Material 3 design
-- **Riverpod** state management
-- **Hive** local database (offline-first)
-- **GoRouter** navigation
-- **FL Chart** analytics
-- **Google Fonts (DM Sans)** typography
-- **flutter_animate** smooth animations
+| Feature | Experience |
+|:---|:---|
+| **📸 Digital Wardrobe** | Effortlessly catalog your clothes with high-quality photos. Our smart detection system helps categorize items for you. |
+| **✨ AI Outfit Stylist** | Stop wondering what to wear. Get curated, perfectly balanced outfit suggestions based on **occasion**, **season**, and **mood**. |
+| **🎨 Personal Mannequin** | Visualize your looks on a custom avatar. Perfect for planning outfits without the physical mess. |
+| **📊 Sustainability Core** | Monitor your wardrobe's "health." Identify unworn items, track wear frequency, and rediscover forgotten favorites. |
+| **🛡️ Privacy First** | 100% offline-first architecture using Hive. Your photos and data stay exactly where they belong: on your device. |
 
-## Folder Structure
+---
 
-```
+## 🎨 Design Philosophy
+
+Dressify is built with a focus on **Rich Aesthetics** and **Visual Excellence**:
+- **Modern Typography**: Powered by *DM Sans* for a sleek, contemporary feel.
+- **Dynamic Interactions**: Fluid animations and micro-interactions powered by `flutter_animate`.
+- **Premium Color Palette**: A harmonious blend of soft violets and rose tones that feels both professional and inviting.
+- **Responsive Layouts**: Optimized for a seamless experience across all mobile devices.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Framework**: [Flutter 3.x](https://flutter.dev)
+- **State Management**: [Riverpod](https://riverpod.dev)
+- **Database**: [Hive](https://docs.hivedb.dev) (Local NoSQL storage)
+- **Navigation**: [GoRouter](https://pub.dev/packages/go_router)
+- **Analytics**: [FL Chart](https://pub.dev/packages/fl_chart)
+- **Animations**: [Flutter Animate](https://pub.dev/packages/flutter_animate)
+
+---
+
+## 📂 Project Architecture
+
+```text
 lib/
 ├── core/
-│   ├── constants/     # App-wide constants
-│   ├── router/        # GoRouter configuration
-│   ├── theme/         # Material 3 theme
-│   └── utils/         # Seed data & utilities
+│   ├── constants/     # Global configurations & branding
+│   ├── router/        # GoRouter declarative path mapping
+│   ├── theme/         # Material 3 Design Tokens
+│   └── utils/         # Seed data & business logic helpers
 ├── features/
-│   ├── wardrobe/      # Clothing catalog
-│   ├── outfits/       # AI outfit generation
-│   ├── history/       # Outfit history tracking
-│   ├── sustainability/ # Eco insights
-│   ├── onboarding/    # First-launch screens
-│   ├── auth/          # Login/signup
-│   └── profile/       # User profile
+│   ├── wardrobe/      # Clothing catalog & smart inventory
+│   ├── outfit_builder/# Visual mannequin & outfit construction
+│   ├── outfits/       # AI-driven stylist engine
+│   ├── history/       # Temporal logging of your style journey
+│   ├── sustainability/ # Data-driven eco-insights
+│   └── profile/       # Personal stats & customization
 └── shared/
-    ├── providers/     # Riverpod providers
-    └── widgets/       # Shared UI components
+    ├── providers/     # Business logic & state observers
+    └── widgets/       # Atomic UI components
 ```
 
-## Setup & Run
+---
 
-### Prerequisites
-- Flutter 3.x installed
-- Android Studio or VS Code
-
-### Steps
+## 🏁 Getting Started
 
 ```bash
-# 1. Clone or navigate to project
-cd d:\Wardrobe_management
+# 1. Clone the repository
+git clone https://github.com/vedashreebhandigare/dressify-Wardrobe-Management-.git
 
 # 2. Install dependencies
 flutter pub get
 
-# 3. Run on web
-flutter run -d web-server --web-port 8080
+# 3. Generate adapters (Hive)
+flutter pub run build_runner build --delete-conflicting-outputs
 
-# 4. Run on Android (with device connected)
-flutter run -d android
-
-# 5. Run on connected iOS device
-flutter run -d ios
+# 4. Launch the Experience
+flutter run
 ```
-
-### Build APK
-
-```bash
-flutter build apk --release
-# Output: build/app/outputs/flutter-apk/app-release.apk
-```
-
-### Build Web (PWA)
-
-```bash
-flutter build web --release
-# Output: build/web/
-```
-
-## Data Models
-
-### ClothingItem
-| Field | Type | Description |
-|-------|------|-------------|
-| id | String | Unique identifier |
-| name | String | Display name |
-| imagePath | String | Local image path |
-| category | String | Tops/Bottoms/Dresses/etc |
-| color | String | Color name |
-| colorHex | String | Hex color code |
-| brand | String | Brand name |
-| season | String | Season suitability |
-| occasion | String | Casual/Work/Formal/etc |
-| pattern | String | Solid/Striped/etc |
-| wearCount | int | Times worn |
-| lastWornDate | DateTime? | Last worn date |
-| isFavorite | bool | Favorited |
-
-### OutfitModel
-| Field | Type | Description |
-|-------|------|-------------|
-| id | String | Unique identifier |
-| clothingItemIds | List\<String\> | Item IDs in outfit |
-| date | DateTime | Date created/worn |
-| occasion | String | Occasion type |
-| name | String | Outfit name |
-| isSaved | bool | Saved by user |
-| isAIGenerated | bool | AI-suggested |
-
-## AI Outfit Logic
-
-The AI outfit generator:
-1. Filters clothes by selected **occasion** and **season**
-2. Picks the **least-worn** items to maximize wardrobe use
-3. Builds a complete look: Top + Bottom + Shoes + Accessory
-4. Falls back to any matching category if filter has no match
-
-## Screens
-
-1. **Onboarding** — 3-slide intro with gradient pages
-2. **Auth** — Sign in / Sign up / Guest mode
-3. **Wardrobe (Home)** — Hero dashboard + today's outfit + items grid
-4. **Add Item** — Photo picker + AI attribute detection + form
-5. **Item Detail** — Full details, wear tracking, favorite
-6. **Outfit Suggestions** — AI generator with occasion/season filter
-7. **History** — Chronological outfit log grouped by month
-8. **Sustainability** — Usage donut chart + forgotten items
-9. **Profile** — Stats cards + settings + sign out
-
-## Offline First
-
-All data is stored in **Hive** (local database). The app works 100% offline. No internet connection required.
-
-## Demo Data
-
-On first launch, 12 demo clothing items are seeded:
-- Classic White Tee (Tops, Casual, 12x worn)
-- Slim Black Jeans (Bottoms, 18x worn)
-- Floral Summer Dress (unused for 95 days → sustainability flag)
-- Silk Blouse (unused for 120 days → sustainability flag)
-- And 8 more items...
 
 ---
 
-Built with ❤️ and Flutter
+## 🌿 Sustainability Goals
+
+We believe the most sustainable garment is the one already in your closet. Dressify helps you:
+- **Decrease Waste**: By visualizing what you own, you avoid redundant purchases.
+- **Increase Utility**: Track the "Cost-per-Wear" of every item.
+- **Style Awareness**: Identifies unused clothes so you can donate or restyle them.
+
+---
+
+<p align="center">
+  Built with ✨ and 🎯 by the Dressify Team
+</p>
