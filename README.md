@@ -1,4 +1,4 @@
-# SmartWardrobe – AI Digital Closet 👗✨
+#Dressify - SmartWardrobe [AI Digital Closet] 👗✨
 
 A production-ready Flutter application for managing your digital wardrobe with AI-powered outfit suggestions and sustainability insights.
 
