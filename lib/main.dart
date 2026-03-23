@@ -45,18 +45,18 @@ void main() async {
         wardrobeRepositoryProvider.overrideWithValue(wardrobeRepo),
         outfitRepositoryProvider.overrideWithValue(outfitRepo),
       ],
-      child: const SmartWardrobeApp(),
+      child: const DressifyApp(),
     ),
   );
 }
 
-class SmartWardrobeApp extends ConsumerWidget {
-  const SmartWardrobeApp({super.key});
+class DressifyApp extends ConsumerWidget {
+  const DressifyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
-      title: 'SmartWardrobe',
+      title: 'Dressify',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       routerConfig: appRouter,

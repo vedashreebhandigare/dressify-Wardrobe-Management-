@@ -50,6 +50,12 @@ class ClothingItem extends HiveObject {
   @HiveField(14)
   String name;
 
+  @HiveField(15)
+  String mannequinLayerImage;
+
+  @HiveField(16)
+  String layerType;
+
   ClothingItem({
     String? id,
     required this.imagePath,
@@ -66,6 +72,8 @@ class ClothingItem extends HiveObject {
     DateTime? createdAt,
     this.colorHex = '#FFFFFF',
     this.name = '',
+    this.mannequinLayerImage = '',
+    this.layerType = '',
   })  : id = id ?? const Uuid().v4(),
         createdAt = createdAt ?? DateTime.now();
 
@@ -83,6 +91,8 @@ class ClothingItem extends HiveObject {
     String? notes,
     String? colorHex,
     String? name,
+    String? mannequinLayerImage,
+    String? layerType,
   }) {
     return ClothingItem(
       id: id,
@@ -100,6 +110,8 @@ class ClothingItem extends HiveObject {
       createdAt: createdAt,
       colorHex: colorHex ?? this.colorHex,
       name: name ?? this.name,
+      mannequinLayerImage: mannequinLayerImage ?? this.mannequinLayerImage,
+      layerType: layerType ?? this.layerType,
     );
   }
 

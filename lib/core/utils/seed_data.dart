@@ -18,6 +18,8 @@ class SeedData {
         colorHex: '#FFFFFF',
         wearCount: 12,
         lastWornDate: DateTime.now().subtract(const Duration(days: 2)),
+        mannequinLayerImage: 'assets/clothes/tops/white_tee.png',
+        layerType: 'top',
       ),
       ClothingItem(
         name: 'Slim Black Jeans',
@@ -31,6 +33,8 @@ class SeedData {
         colorHex: '#1A1A1A',
         wearCount: 18,
         lastWornDate: DateTime.now().subtract(const Duration(days: 1)),
+        mannequinLayerImage: 'assets/clothes/bottoms/trousers.png',
+        layerType: 'bottom',
       ),
       ClothingItem(
         name: 'Navy Oxford Shirt',
@@ -44,6 +48,8 @@ class SeedData {
         colorHex: '#001F5B',
         wearCount: 6,
         lastWornDate: DateTime.now().subtract(const Duration(days: 7)),
+        mannequinLayerImage: 'assets/clothes/tops/blue_shirt.png',
+        layerType: 'top',
       ),
       ClothingItem(
         name: 'Beige Chino Trousers',
@@ -57,6 +63,8 @@ class SeedData {
         colorHex: '#F5F5DC',
         wearCount: 5,
         lastWornDate: DateTime.now().subtract(const Duration(days: 14)),
+        mannequinLayerImage: 'assets/clothes/bottoms/trousers.png',
+        layerType: 'bottom',
       ),
       ClothingItem(
         name: 'White Sneakers',
@@ -70,6 +78,8 @@ class SeedData {
         colorHex: '#FFFFFF',
         wearCount: 22,
         lastWornDate: DateTime.now().subtract(const Duration(days: 1)),
+        mannequinLayerImage: 'assets/clothes/shoes/sneakers.png',
+        layerType: 'shoes',
       ),
       ClothingItem(
         name: 'Floral Summer Dress',
@@ -83,6 +93,8 @@ class SeedData {
         colorHex: '#FF6B6B',
         wearCount: 2,
         lastWornDate: DateTime.now().subtract(const Duration(days: 95)),
+        mannequinLayerImage: 'assets/clothes/bottoms/skirt.png',
+        layerType: 'bottom',
       ),
       ClothingItem(
         name: 'Grey Knit Sweater',
@@ -96,6 +108,8 @@ class SeedData {
         colorHex: '#808080',
         wearCount: 9,
         lastWornDate: DateTime.now().subtract(const Duration(days: 20)),
+        mannequinLayerImage: 'assets/clothes/tops/sweater.png',
+        layerType: 'top',
       ),
       ClothingItem(
         name: 'Black Watch',
@@ -135,6 +149,8 @@ class SeedData {
         colorHex: '#2196F3',
         wearCount: 0,
         lastWornDate: null,
+        mannequinLayerImage: 'assets/clothes/shoes/sneakers.png',
+        layerType: 'shoes',
       ),
       ClothingItem(
         name: 'Silk Blouse',
@@ -149,6 +165,8 @@ class SeedData {
         wearCount: 1,
         lastWornDate: DateTime.now().subtract(const Duration(days: 120)),
         isFavorite: true,
+        mannequinLayerImage: 'assets/clothes/tops/blue_shirt.png',
+        layerType: 'top',
       ),
       ClothingItem(
         name: 'Sports Leggings',

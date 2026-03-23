@@ -50,23 +50,29 @@ class WardrobeNotifier extends StateNotifier<List<ClothingItem>> {
 
 final selectedCategoryProvider = StateProvider<String>((ref) => 'All');
 final selectedSeasonProvider = StateProvider<String>((ref) => 'All Season');
+final selectedOccasionProvider = StateProvider<String>((ref) => 'All');
+final selectedColorProvider = StateProvider<String>((ref) => 'All');
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
 final filteredWardrobeProvider = Provider<List<ClothingItem>>((ref) {
   final items = ref.watch(wardrobeListProvider);
   final category = ref.watch(selectedCategoryProvider);
   final season = ref.watch(selectedSeasonProvider);
+  final occasion = ref.watch(selectedOccasionProvider);
+  final colorFilter = ref.watch(selectedColorProvider);
   final query = ref.watch(searchQueryProvider).toLowerCase();
 
   return items.where((item) {
     final matchCategory = category == 'All' || item.category == category;
     final matchSeason = season == 'All Season' || item.season == season;
+    final matchOccasion = occasion == 'All' || item.occasion == occasion;
+    final matchColor = colorFilter == 'All' || item.color == colorFilter;
     final matchQuery = query.isEmpty ||
         item.name.toLowerCase().contains(query) ||
         item.category.toLowerCase().contains(query) ||
         item.color.toLowerCase().contains(query) ||
         item.brand.toLowerCase().contains(query);
-    return matchCategory && matchSeason && matchQuery;
+    return matchCategory && matchSeason && matchOccasion && matchColor && matchQuery;
   }).toList();
 });
 

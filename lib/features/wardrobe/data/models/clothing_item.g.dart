@@ -17,7 +17,7 @@ class ClothingItemAdapter extends TypeAdapter<ClothingItem> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ClothingItem(
-      id: fields[0] as String,
+      id: fields[0] as String?,
       imagePath: fields[1] as String,
       category: fields[2] as String,
       color: fields[3] as String,
@@ -29,16 +29,18 @@ class ClothingItemAdapter extends TypeAdapter<ClothingItem> {
       pattern: fields[9] as String,
       occasion: fields[10] as String,
       notes: fields[11] as String,
-      createdAt: fields[12] as DateTime,
+      createdAt: fields[12] as DateTime?,
       colorHex: fields[13] as String,
       name: fields[14] as String,
+      mannequinLayerImage: fields[15] as String,
+      layerType: fields[16] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ClothingItem obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -68,7 +70,11 @@ class ClothingItemAdapter extends TypeAdapter<ClothingItem> {
       ..writeByte(13)
       ..write(obj.colorHex)
       ..writeByte(14)
-      ..write(obj.name);
+      ..write(obj.name)
+      ..writeByte(15)
+      ..write(obj.mannequinLayerImage)
+      ..writeByte(16)
+      ..write(obj.layerType);
   }
 
   @override

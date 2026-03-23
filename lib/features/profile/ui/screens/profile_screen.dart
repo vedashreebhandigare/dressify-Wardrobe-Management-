@@ -66,6 +66,37 @@ class ProfileScreen extends ConsumerWidget {
 
                   const SizedBox(height: 24),
 
+                  const _SectionTitle('Daily Styling Tips'),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 120,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        _StylingTipCard(
+                          icon: Icons.face_retouching_natural,
+                          title: 'Hair & Necklines',
+                          desc: 'V-neck tops pair well with open hairstyles to elongate the neck.',
+                          color: const Color(0xFFFFCCBC),
+                        ).animate().fadeIn(delay: 250.ms),
+                        _StylingTipCard(
+                          icon: Icons.straighten_rounded,
+                          title: 'Proportions',
+                          desc: 'High-waist jeans look great with cropped tops or tucked-in shirts.',
+                          color: const Color(0xFFC5CAE9),
+                        ).animate().fadeIn(delay: 300.ms),
+                        _StylingTipCard(
+                          icon: Icons.directions_run_rounded,
+                          title: 'Footwear',
+                          desc: 'Neutral shoes match most outfits and create a cohesive look.',
+                          color: const Color(0xFFE6EE9C),
+                        ).animate().fadeIn(delay: 350.ms),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
                   // Settings Cards
                   const _SectionTitle('Preferences'),
                   const SizedBox(height: 12),
@@ -255,6 +286,60 @@ class _SettingTile extends StatelessWidget {
             ),
           ),
           trailing,
+        ],
+      ),
+    );
+  }
+}
+
+class _StylingTipCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String desc;
+  final Color color;
+
+  const _StylingTipCard({
+    required this.icon,
+    required this.title,
+    required this.desc,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 250,
+      margin: const EdgeInsets.only(right: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color, width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 20, color: AppTheme.textPrimary.withOpacity(0.7)),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title, 
+                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            desc,
+            style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ),
     );

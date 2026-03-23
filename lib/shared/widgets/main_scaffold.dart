@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../core/theme/app_theme.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -15,10 +16,9 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   final _navItems = [
     const _NavItem(icon: Icons.home_rounded, label: 'Home', path: '/home'),
-    const _NavItem(icon: Icons.checkroom_rounded, label: 'Wardrobe', path: '/wardrobe'),
-    const _NavItem(icon: Icons.auto_awesome_rounded, label: 'Outfits', path: '/outfits'),
-    const _NavItem(icon: Icons.history_rounded, label: 'History', path: '/history'),
-    const _NavItem(icon: Icons.eco_rounded, label: 'Eco', path: '/sustainability'),
+    const _NavItem(icon: Icons.checkroom_rounded, label: 'Builder', path: '/outfit-builder'),
+    const _NavItem(icon: Icons.style_rounded, label: 'Swipe', path: '/swipe-outfits'),
+    const _NavItem(icon: Icons.person_rounded, label: 'Profile', path: '/profile'),
   ];
 
   void _onTap(int index) {
@@ -28,19 +28,34 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: widget.child,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/add-item'),
-        tooltip: 'Add Clothing',
-        child: const Icon(Icons.add_rounded, size: 28),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: _BottomNav(
-        selectedIndex: _selectedIndex,
-        onTap: _onTap,
-        items: _navItems,
-      ),
+    return Stack(
+      children: [
+        Scaffold(
+          body: widget.child,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => context.push('/add-item'),
+            tooltip: 'Add Clothing',
+            child: const Icon(Icons.add_rounded, size: 28),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: _BottomNav(
+            selectedIndex: _selectedIndex,
+            onTap: _onTap,
+            items: _navItems,
+          ),
+        ),
+        // Persistent Global Logo
+        Positioned(
+          top: 60,
+          right: 30,
+          child: Image.asset(
+            "assets/icons/Dressify_withName.png",
+            width: 50,
+            height: 50,
+            fit: BoxFit.contain,
+          ).animate().fadeIn(duration: 800.ms),
+        ),
+      ],
     );
   }
 }

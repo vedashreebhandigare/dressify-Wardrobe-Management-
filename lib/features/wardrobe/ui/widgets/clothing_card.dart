@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../features/wardrobe/data/models/clothing_item.dart';
@@ -54,19 +55,14 @@ class ClothingCard extends ConsumerWidget {
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
                           ),
-                          child: Image.asset(
-                            item.imagePath,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            errorBuilder: (_, __, ___) => Center(
-                              child: Text(_categoryEmoji(item.category),
-                                  style: const TextStyle(fontSize: 48)),
-                            ),
-                          ),
+                          child: _buildItemImage(item.imagePath),
                         )
                       : Center(
-                          child: Text(_categoryEmoji(item.category),
-                              style: const TextStyle(fontSize: 48)),
+                          child: Icon(
+                            _categoryIcon(item.category),
+                            size: 48,
+                            color: _hexToColor(item.colorHex).withOpacity(0.5),
+                          ),
                         ),
                 ),
                 if (item.isFavorite)
@@ -175,18 +171,41 @@ class ClothingCard extends ConsumerWidget {
     );
   }
 
-  String _categoryEmoji(String category) {
+  Widget _buildItemImage(String path) {
+    final file = File(path);
+    if (file.existsSync()) {
+      return Image.file(
+        file,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        errorBuilder: (_, __, ___) => Center(
+          child: Icon(Icons.checkroom_rounded, size: 48, color: AppTheme.textHint),
+        ),
+      );
+    }
+    // Try as asset (for seed data with asset paths)
+    return Image.asset(
+      path,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      errorBuilder: (_, __, ___) => Center(
+        child: Icon(Icons.checkroom_rounded, size: 48, color: AppTheme.textHint),
+      ),
+    );
+  }
+
+  IconData _categoryIcon(String category) {
     const map = {
-      'Tops': '👕',
-      'Bottoms': '👖',
-      'Dresses': '👗',
-      'Outerwear': '🧥',
-      'Shoes': '👟',
-      'Accessories': '👜',
-      'Activewear': '🏃',
-      'Formal': '👔',
-      'Sleepwear': '🛏️',
+      'Tops': Icons.checkroom_rounded,
+      'Bottoms': Icons.straighten_rounded,
+      'Dresses': Icons.checkroom_rounded,
+      'Outerwear': Icons.checkroom_rounded,
+      'Shoes': Icons.ice_skating_rounded,
+      'Accessories': Icons.watch_rounded,
+      'Activewear': Icons.fitness_center_rounded,
+      'Formal': Icons.checkroom_rounded,
+      'Sleepwear': Icons.nightlight_round,
     };
-    return map[category] ?? '👗';
+    return map[category] ?? Icons.checkroom_rounded;
   }
 }

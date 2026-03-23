@@ -64,35 +64,50 @@ class OutfitRepository {
     String occasion = 'Casual',
     String season = 'All Season',
   }) {
-    ClothingItem? findItem(String category) {
-      final candidates = wardrobe.where((item) =>
+    // Helper rules
+    final neutrals = ['Black', 'White', 'Gray', 'Beige', 'Navy'];
+    bool _isNeutral(String color) => neutrals.contains(color);
+
+    ClothingItem? _findItem(String category, {ClothingItem? matchWith}) {
+      var candidates = wardrobe.where((item) =>
         item.category == category &&
         (item.season == season || item.season == 'All Season') &&
         (occasion == 'Casual' || item.occasion == occasion)
       ).toList();
+
       if (candidates.isEmpty) return null;
+
+      // Smart filtering based on what we are matching with
+      if (matchWith != null) {
+        // Pattern clash avoidance: if one is patterned, prefer solid for the other
+        if (matchWith.pattern != 'Solid') {
+          final solidMates = candidates.where((i) => i.pattern == 'Solid').toList();
+          if (solidMates.isNotEmpty) candidates = solidMates;
+        }
+
+        // Color harmony: if neither is neutral, prefer pairing with a neutral
+        if (!_isNeutral(matchWith.color)) {
+          final neutralMates = candidates.where((i) => _isNeutral(i.color)).toList();
+          if (neutralMates.isNotEmpty) candidates = neutralMates;
+        }
+      }
+
+      // Final sort: prefer least-worn items
       candidates.sort((a, b) => a.wearCount.compareTo(b.wearCount));
       return candidates.first;
     }
 
     final ids = <String>[];
 
-    final top = findItem('Tops') ??
-        (wardrobe.where((i) => i.category == 'Tops').isNotEmpty
-            ? (wardrobe.where((i) => i.category == 'Tops').toList()
-                ..sort((a, b) => a.wearCount.compareTo(b.wearCount))).first
-            : null);
-    final bottom = findItem('Bottoms') ??
-        (wardrobe.where((i) => i.category == 'Bottoms').isNotEmpty
-            ? (wardrobe.where((i) => i.category == 'Bottoms').toList()
-                ..sort((a, b) => a.wearCount.compareTo(b.wearCount))).first
-            : null);
-    final shoes = findItem('Shoes') ??
-        (wardrobe.where((i) => i.category == 'Shoes').isNotEmpty
-            ? (wardrobe.where((i) => i.category == 'Shoes').toList()
-                ..sort((a, b) => a.wearCount.compareTo(b.wearCount))).first
-            : null);
-    final accessory = findItem('Accessories') ??
+    final top = _findItem('Tops');
+    // If top is chosen, find a bottom that matches it
+    final bottom = _findItem('Bottoms', matchWith: top) ?? _findItem('Bottoms');
+    
+    // Shoes should generally match occasion, but let's try to match with bottom or top
+    final shoes = _findItem('Shoes', matchWith: bottom) ?? _findItem('Shoes');
+    
+    // Find accessories
+    final accessory = _findItem('Accessories') ??
         (wardrobe.where((i) => i.category == 'Accessories').isNotEmpty
             ? wardrobe.where((i) => i.category == 'Accessories').first
             : null);
@@ -101,6 +116,14 @@ class OutfitRepository {
     if (bottom != null) ids.add(bottom.id);
     if (shoes != null) ids.add(shoes.id);
     if (accessory != null) ids.add(accessory.id);
+
+    // Fallback if strict filters completely failed (at least give something)
+    if (ids.isEmpty) {
+       final anyTop = wardrobe.where((i) => i.category == 'Tops').firstOrNull;
+       final anyBottom = wardrobe.where((i) => i.category == 'Bottoms').firstOrNull;
+       if (anyTop != null) ids.add(anyTop.id);
+       if (anyBottom != null) ids.add(anyBottom.id);
+    }
 
     const occasionNames = {
       'Casual': 'Chill & Casual',
@@ -114,7 +137,7 @@ class OutfitRepository {
       clothingItemIds: ids,
       date: DateTime.now(),
       occasion: occasion,
-      name: occasionNames[occasion] ?? 'AI Styled Look',
+      name: occasionNames[occasion] ?? 'Smart Styled Look',
       isAIGenerated: true,
     );
   }

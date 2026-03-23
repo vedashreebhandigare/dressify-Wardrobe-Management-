@@ -233,7 +233,7 @@ class _EmptyHistory extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('📅', style: TextStyle(fontSize: 56)),
+          Icon(Icons.calendar_today_rounded, size: 56, color: AppTheme.textHint.withOpacity(0.5)),
           const SizedBox(height: 16),
           const Text('No history yet', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
           const SizedBox(height: 8),

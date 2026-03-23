@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -109,7 +110,7 @@ class _EcoHeader extends StatelessWidget {
           children: [
             const Row(
               children: [
-                Text('🌿', style: TextStyle(fontSize: 28)),
+                Icon(Icons.eco_rounded, size: 28, color: Colors.white),
                 SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -377,9 +378,16 @@ class _UnusedItemTile extends StatelessWidget {
 
   const _UnusedItemTile({required this.item, required this.onTap});
 
-  String _emoji(String cat) {
-    const map = {'Tops': '👕', 'Bottoms': '👖', 'Dresses': '👗', 'Outerwear': '🧥', 'Shoes': '👟', 'Accessories': '👜'};
-    return map[cat] ?? '👗';
+  IconData _categoryIcon(String cat) {
+    const map = {
+      'Tops': Icons.checkroom_rounded,
+      'Bottoms': Icons.straighten_rounded,
+      'Dresses': Icons.checkroom_rounded,
+      'Outerwear': Icons.checkroom_rounded,
+      'Shoes': Icons.ice_skating_rounded,
+      'Accessories': Icons.watch_rounded,
+    };
+    return map[cat] ?? Icons.checkroom_rounded;
   }
 
   @override
@@ -404,7 +412,12 @@ class _UnusedItemTile extends StatelessWidget {
                 color: AppTheme.warning.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Center(child: Text(_emoji(item.category), style: const TextStyle(fontSize: 24))),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: item.imagePath.isNotEmpty
+                    ? _buildSmartImage(item.imagePath)
+                    : Center(child: Icon(_categoryIcon(item.category), size: 24, color: AppTheme.warning)),
+              ),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -434,5 +447,19 @@ class _UnusedItemTile extends StatelessWidget {
 
   int _daysSince(DateTime date) {
     return DateTime.now().difference(date).inDays;
+  }
+
+  Widget _buildSmartImage(String path) {
+    final file = File(path);
+    if (file.existsSync()) {
+      return Image.file(file, fit: BoxFit.cover, width: 48, height: 48,
+        errorBuilder: (_, __, ___) => Center(
+          child: Icon(_categoryIcon(item.category), size: 24, color: AppTheme.warning),
+        ));
+    }
+    return Image.asset(path, fit: BoxFit.cover, width: 48, height: 48,
+      errorBuilder: (_, __, ___) => Center(
+        child: Icon(_categoryIcon(item.category), size: 24, color: AppTheme.warning),
+      ));
   }
 }

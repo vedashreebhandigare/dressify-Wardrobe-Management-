@@ -75,11 +75,18 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           ],
                         ),
-                        child: const Icon(Icons.checkroom_rounded, color: Colors.white, size: 44),
+                        child: Center(
+                          child: Image.asset(
+                            "assets/icons/Dressify_withName.png",
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 16),
                       const Text(
-                        'SmartWardrobe',
+                        'Dressify',
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.w800,

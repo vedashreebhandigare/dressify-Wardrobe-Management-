@@ -1,5 +1,5 @@
 class AppConstants {
-  static const String appName = 'SmartWardrobe';
+  static const String appName = 'Dressify';
   static const String appTagline = 'AI Digital Closet';
   static const String hiveBoxWardrobe = 'wardrobe_box';
   static const String hiveBoxOutfits = 'outfits_box';

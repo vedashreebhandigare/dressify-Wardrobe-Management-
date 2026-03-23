@@ -18,19 +18,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final _pages = [
     const _OnboardingPage(
-      emoji: '👗',
+      icon: Icons.checkroom_rounded,
       title: 'Your Digital\nWardrobe',
       subtitle: 'Catalog every piece of clothing with a photo. Build your perfect digital closet.',
       gradient: [Color(0xFF7C6FCD), Color(0xFFB39DDB)],
     ),
     const _OnboardingPage(
-      emoji: '✨',
+      icon: Icons.auto_awesome_rounded,
       title: 'AI Outfit\nSuggestions',
       subtitle: 'Let our AI curate perfect outfits for every occasion, season, and mood.',
       gradient: [Color(0xFFF48FB1), Color(0xFFCE93D8)],
     ),
     const _OnboardingPage(
-      emoji: '🌿',
+      icon: Icons.eco_rounded,
       title: 'Sustainable\nFashion',
       subtitle: 'Track what you wear, reduce waste, and rediscover forgotten favorites.',
       gradient: [Color(0xFF4DB6AC), Color(0xFF80DEEA)],
@@ -136,13 +136,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 }
 
 class _OnboardingPage extends StatelessWidget {
-  final String emoji;
+  final IconData icon;
   final String title;
   final String subtitle;
   final List<Color> gradient;
 
   const _OnboardingPage({
-    required this.emoji,
+    required this.icon,
     required this.title,
     required this.subtitle,
     required this.gradient,
@@ -174,7 +174,7 @@ class _OnboardingPage extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Center(
-                    child: Text(emoji, style: const TextStyle(fontSize: 80)),
+                    child: Icon(icon, size: 80, color: Colors.white),
                   ),
                 ).animate().scale(duration: 600.ms, curve: Curves.elasticOut),
               ),

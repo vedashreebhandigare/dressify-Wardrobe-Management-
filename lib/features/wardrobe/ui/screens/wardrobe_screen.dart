@@ -1,8 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../shared/providers/wardrobe_providers.dart';
@@ -82,7 +82,7 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen> with TickerProv
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('My Wardrobe', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
+                      const Text('Dressify', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
                       Text('${filteredItems.length} items', style: const TextStyle(fontSize: 14, color: AppTheme.textSecondary)),
                     ],
                   ),
@@ -100,17 +100,22 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen> with TickerProv
               ? SliverFillRemaining(child: _EmptyWardrobe())
               : SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  sliver: SliverMasonryGrid.count(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childCount: filteredItems.length,
-                    itemBuilder: (context, index) {
-                      return ClothingCard(
-                        item: filteredItems[index],
-                        onTap: () => context.push('/item/${filteredItems[index].id}'),
-                      ).animate(delay: (index * 50).ms).fadeIn().slideY(begin: 0.1);
-                    },
+                  sliver: SliverGrid(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      mainAxisExtent: 240, // Fixed height for perfect alignment
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return ClothingCard(
+                          item: filteredItems[index],
+                          onTap: () => context.push('/item/${filteredItems[index].id}'),
+                        ).animate(delay: (index * 50).ms).fadeIn().slideY(begin: 0.1);
+                      },
+                      childCount: filteredItems.length,
+                    ),
                   ),
                 ),
 
@@ -155,12 +160,12 @@ class _HeroHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Good morning! 👋',
+                      'Good morning!',
                       style: TextStyle(fontSize: 14, color: Colors.white70),
                     ),
                     const SizedBox(height: 4),
                     const Text(
-                      'SmartWardrobe',
+                      'Dressify',
                       style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.w800,
@@ -170,17 +175,27 @@ class _HeroHeader extends StatelessWidget {
                     ),
                   ],
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/icons/Dressify_withName.png",
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.contain,
+                    ).animate().fadeIn(delay: 500.ms).scale(),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                     ),
-                    child: const Icon(Icons.person_rounded, color: Colors.white, size: 26),
-                  ),
+                  ],
                 ),
               ],
             ),
@@ -338,8 +353,7 @@ class _TodayOutfitCard extends StatelessWidget {
                         child: item.imagePath.isNotEmpty
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
-                                child: Image.asset(item.imagePath, fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => const Icon(Icons.checkroom_rounded, color: AppTheme.primary, size: 28)),
+                                child: _buildSmartImage(item.imagePath),
                               )
                             : const Icon(Icons.checkroom_rounded, color: AppTheme.primary, size: 28),
                       ),
@@ -353,6 +367,16 @@ class _TodayOutfitCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildSmartImage(String path) {
+    final file = File(path);
+    if (file.existsSync()) {
+      return Image.file(file, fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => const Icon(Icons.checkroom_rounded, color: AppTheme.primary, size: 28));
+    }
+    return Image.asset(path, fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => const Icon(Icons.checkroom_rounded, color: AppTheme.primary, size: 28));
   }
 }
 
@@ -429,16 +453,168 @@ class _SearchBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextField(
-        onChanged: (v) => ref.read(searchQueryProvider.notifier).state = v,
-        decoration: const InputDecoration(
-          prefixIcon: Icon(Icons.search_rounded, color: AppTheme.textHint),
-          hintText: 'Search clothes...',
-        ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              onChanged: (v) => ref.read(searchQueryProvider.notifier).state = v,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search_rounded, color: AppTheme.textHint),
+                hintText: 'Search clothes...',
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          GestureDetector(
+            onTap: () {
+              // Show advanced filters bottom sheet
+              showModalBottomSheet(
+                context: context,
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
+                builder: (context) => const _AdvancedFilterModal(),
+              );
+            },
+            child: Container(
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                color: AppTheme.primary,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(color: AppTheme.primary.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: const Icon(Icons.tune_rounded, color: Colors.white),
+            ),
+          )
+        ],
       ),
     );
   }
 }
+
+class _AdvancedFilterModal extends ConsumerWidget {
+  const _AdvancedFilterModal();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Filters', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 20),
+          
+          const Text('Season', style: TextStyle(fontWeight: FontWeight.w600)),
+          const SizedBox(height: 8),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: ['All Season', 'Summer', 'Winter', 'Spring', 'Fall']
+                  .map((s) => Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text(s),
+                          labelStyle: TextStyle(
+                            color: ref.watch(selectedSeasonProvider) == s ? Colors.white : AppTheme.textPrimary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          selected: ref.watch(selectedSeasonProvider) == s,
+                          selectedColor: AppTheme.primary,
+                          backgroundColor: AppTheme.surfaceVariant,
+                          side: BorderSide(
+                            color: ref.watch(selectedSeasonProvider) == s ? AppTheme.primary : AppTheme.textHint.withOpacity(0.3),
+                            width: 1,
+                          ),
+                          onSelected: (val) {
+                            if (val) ref.read(selectedSeasonProvider.notifier).state = s;
+                          },
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+          
+          const SizedBox(height: 20),
+          const Text('Occasion', style: TextStyle(fontWeight: FontWeight.w600)),
+          const SizedBox(height: 8),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: ['All', 'Casual', 'Work', 'Formal', 'Party', 'Activewear', 'Loungewear']
+                  .map((s) => Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text(s),
+                          labelStyle: TextStyle(
+                            color: ref.watch(selectedOccasionProvider) == s ? Colors.white : AppTheme.textPrimary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          selected: ref.watch(selectedOccasionProvider) == s,
+                          selectedColor: AppTheme.primary,
+                          backgroundColor: AppTheme.surfaceVariant,
+                          side: BorderSide(
+                            color: ref.watch(selectedOccasionProvider) == s ? AppTheme.primary : AppTheme.textHint.withOpacity(0.3),
+                            width: 1,
+                          ),
+                          onSelected: (val) {
+                            if (val) ref.read(selectedOccasionProvider.notifier).state = s;
+                          },
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+          
+          const SizedBox(height: 20),
+          const Text('Color', style: TextStyle(fontWeight: FontWeight.w600)),
+          const SizedBox(height: 8),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: ['All', 'Black', 'White', 'Blue', 'Red', 'Green', 'Brown']
+                  .map((s) => Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text(s),
+                          labelStyle: TextStyle(
+                            color: ref.watch(selectedColorProvider) == s ? Colors.white : AppTheme.textPrimary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          selected: ref.watch(selectedColorProvider) == s,
+                          selectedColor: AppTheme.primary,
+                          backgroundColor: AppTheme.surfaceVariant,
+                          side: BorderSide(
+                            color: ref.watch(selectedColorProvider) == s ? AppTheme.primary : AppTheme.textHint.withOpacity(0.3),
+                            width: 1,
+                          ),
+                          onSelected: (val) {
+                            if (val) ref.read(selectedColorProvider.notifier).state = s;
+                          },
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+          const SizedBox(height: 30),
+        ],
+      ),
+    );
+  }
+}
+
 
 class _CategoryFilter extends ConsumerWidget {
   @override
@@ -479,7 +655,7 @@ class _CategoryFilter extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    color: isSelected ? Colors.white : AppTheme.textSecondary,
+                    color: isSelected ? Colors.white : AppTheme.textPrimary,
                   ),
                 ),
               ),
@@ -500,7 +676,7 @@ class _EmptyWardrobe extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('👔', style: TextStyle(fontSize: 64)),
+          Icon(Icons.checkroom_rounded, size: 64, color: AppTheme.textHint.withOpacity(0.5)),
           const SizedBox(height: 16),
           const Text(
             'Your wardrobe is empty',

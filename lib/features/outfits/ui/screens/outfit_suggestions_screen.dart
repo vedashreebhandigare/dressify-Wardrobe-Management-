@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -154,7 +155,7 @@ class _OutfitHeader extends StatelessWidget {
             bottom: false,
             child: Row(
               children: [
-                const Text('✨', style: TextStyle(fontSize: 28)),
+                const Icon(Icons.auto_awesome_rounded, size: 28, color: Colors.white),
                 const SizedBox(width: 10),
                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,7 +298,7 @@ class _OutfitCard extends ConsumerWidget {
                                 gradient: AppTheme.heroGradient,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const Text('AI ✨', style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w600)),
+                              child: const Text('AI', style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w600)),
                             ),
                         ],
                       ),
@@ -348,9 +349,30 @@ class _OutfitItemTile extends StatelessWidget {
   final ClothingItem item;
   const _OutfitItemTile({required this.item});
 
-  String _emoji(String cat) {
-    const map = {'Tops': '👕', 'Bottoms': '👖', 'Dresses': '👗', 'Outerwear': '🧥', 'Shoes': '👟', 'Accessories': '👜'};
-    return map[cat] ?? '👗';
+  Widget _buildSmartImage(String path) {
+    final file = File(path);
+    if (file.existsSync()) {
+      return Image.file(file, fit: BoxFit.cover, width: double.infinity, height: double.infinity,
+        errorBuilder: (_, __, ___) => Center(
+          child: Icon(_categoryIcon(item.category), size: 32, color: AppTheme.textHint),
+        ));
+    }
+    return Image.asset(path, fit: BoxFit.cover, width: double.infinity, height: double.infinity,
+      errorBuilder: (_, __, ___) => Center(
+        child: Icon(_categoryIcon(item.category), size: 32, color: AppTheme.textHint),
+      ));
+  }
+
+  IconData _categoryIcon(String cat) {
+    const map = {
+      'Tops': Icons.checkroom_rounded,
+      'Bottoms': Icons.straighten_rounded,
+      'Dresses': Icons.checkroom_rounded,
+      'Outerwear': Icons.checkroom_rounded,
+      'Shoes': Icons.ice_skating_rounded,
+      'Accessories': Icons.watch_rounded,
+    };
+    return map[cat] ?? Icons.checkroom_rounded;
   }
 
   @override
@@ -363,7 +385,14 @@ class _OutfitItemTile extends StatelessWidget {
             color: AppTheme.surfaceVariant,
             borderRadius: BorderRadius.circular(14),
           ),
-          child: Center(child: Text(_emoji(item.category), style: const TextStyle(fontSize: 32))),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: item.imagePath.isNotEmpty
+                ? _buildSmartImage(item.imagePath)
+                : Center(
+                    child: Icon(_categoryIcon(item.category), size: 32, color: AppTheme.textHint),
+                  ),
+          ),
         ),
         const SizedBox(height: 4),
         Text(
@@ -392,7 +421,7 @@ class _EmptyState extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Text('✨', style: TextStyle(fontSize: 56)),
+          Icon(Icons.auto_awesome_rounded, size: 56, color: AppTheme.textHint.withOpacity(0.5)),
           const SizedBox(height: 16),
           const Text('No outfits yet', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
           const SizedBox(height: 8),

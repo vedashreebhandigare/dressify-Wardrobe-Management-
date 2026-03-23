@@ -17,9 +17,9 @@ class OutfitModelAdapter extends TypeAdapter<OutfitModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return OutfitModel(
-      id: fields[0] as String,
+      id: fields[0] as String?,
       clothingItemIds: (fields[1] as List).cast<String>(),
-      date: fields[2] as DateTime,
+      date: fields[2] as DateTime?,
       occasion: fields[3] as String,
       name: fields[4] as String,
       isSaved: fields[5] as bool,

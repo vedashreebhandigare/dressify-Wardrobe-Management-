@@ -70,8 +70,10 @@ class _ItemDetailScreenState extends ConsumerState<ItemDetailScreen> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: AppTheme.background,
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: AppTheme.background,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -114,14 +116,13 @@ class _ItemDetailScreenState extends ConsumerState<ItemDetailScreen> {
                 child: Container(
                   color: AppTheme.surfaceVariant,
                   child: item.imagePath.isNotEmpty
-                      ? Image.file(File(item.imagePath), fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Center(
-                            child: Text(_categoryEmoji(item.category),
-                                style: const TextStyle(fontSize: 80)),
-                          ))
+                      ? _buildDetailImage(item.imagePath)
                       : Center(
-                          child: Text(_categoryEmoji(item.category),
-                              style: const TextStyle(fontSize: 80)),
+                          child: Icon(
+                            _categoryIcon(item.category),
+                            size: 80,
+                            color: AppTheme.textHint.withOpacity(0.5),
+                          ),
                         ),
                 ),
               ),
@@ -256,15 +257,58 @@ class _ItemDetailScreenState extends ConsumerState<ItemDetailScreen> {
           ),
         ],
       ),
+        ),
+        // Logo transition matching splash
+        Positioned(
+          top: 60,
+          right: 30,
+          child: Image.asset(
+            "assets/icons/Dressify_withName.png",
+            width: 50,
+            height: 50,
+            fit: BoxFit.contain,
+          ).animate().fadeIn(duration: 800.ms),
+        ),
+      ],
     );
   }
 
-  String _categoryEmoji(String category) {
+  Widget _buildDetailImage(String path) {
+    final file = File(path);
+    if (file.existsSync()) {
+      return Image.file(
+        file,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (_, __, ___) => Center(
+          child: Icon(Icons.checkroom_rounded, size: 80, color: AppTheme.textHint),
+        ),
+      );
+    }
+    return Image.asset(
+      path,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+      errorBuilder: (_, __, ___) => Center(
+        child: Icon(Icons.checkroom_rounded, size: 80, color: AppTheme.textHint),
+      ),
+    );
+  }
+
+  IconData _categoryIcon(String category) {
     const map = {
-      'Tops': '👕', 'Bottoms': '👖', 'Dresses': '👗', 'Outerwear': '🧥',
-      'Shoes': '👟', 'Accessories': '👜', 'Activewear': '🏃', 'Formal': '👔',
+      'Tops': Icons.checkroom_rounded,
+      'Bottoms': Icons.straighten_rounded,
+      'Dresses': Icons.checkroom_rounded,
+      'Outerwear': Icons.checkroom_rounded,
+      'Shoes': Icons.ice_skating_rounded,
+      'Accessories': Icons.watch_rounded,
+      'Activewear': Icons.fitness_center_rounded,
+      'Formal': Icons.checkroom_rounded,
     };
-    return map[category] ?? '👗';
+    return map[category] ?? Icons.checkroom_rounded;
   }
 }
 

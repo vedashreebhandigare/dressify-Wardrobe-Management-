@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'dart:io';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -44,8 +45,46 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       final picker = ImagePicker();
       final picked = await picker.pickImage(source: source, maxWidth: 1024, imageQuality: 85);
       if (picked != null) {
-        setState(() => _imagePath = picked.path);
-        _autoDetectAttributes();
+        // Try cropping; if it fails, fall back to using the original picked image
+        try {
+          final croppedFile = await ImageCropper().cropImage(
+            sourcePath: picked.path,
+            uiSettings: [
+              AndroidUiSettings(
+                toolbarTitle: 'Crop Image',
+                toolbarColor: Colors.black,
+                toolbarWidgetColor: Colors.white,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false,
+              ),
+              IOSUiSettings(
+                title: 'Crop Image',
+              ),
+            ],
+          );
+
+          if (croppedFile != null) {
+            setState(() => _imagePath = croppedFile.path);
+            _autoDetectAttributes();
+          }
+        } catch (cropError) {
+          // Cropping failed — use the original picked image as fallback
+          debugPrint('Image cropping failed: $cropError');
+          setState(() => _imagePath = picked.path);
+          _autoDetectAttributes();
+        }
+      }
+    } catch (e) {
+      debugPrint('Image picking failed: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Failed to pick image. Please check app permissions.'),
+            backgroundColor: Colors.red.shade700,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
       }
     } finally {
       setState(() => _isLoading = false);
@@ -122,29 +161,31 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.background,
-      appBar: AppBar(
-        title: const Text('Add Clothing Item'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded),
-          onPressed: () => context.pop(),
-        ),
-        actions: [
-          if (_isSaving)
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
-            )
-          else
-            TextButton(
-              onPressed: _save,
-              child: const Text('Save', style: TextStyle(fontWeight: FontWeight.w700, color: AppTheme.primary)),
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: AppTheme.background,
+          appBar: AppBar(
+            title: const Text('Add Clothing Item'),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_rounded),
+              onPressed: () => context.pop(),
             ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+            actions: [
+              if (_isSaving)
+                const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                )
+              else
+                TextButton(
+                  onPressed: _save,
+                  child: const Text('Save', style: TextStyle(fontWeight: FontWeight.w700, color: AppTheme.primary)),
+                ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: Column(
@@ -301,6 +342,19 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
           ),
         ),
       ),
+        ),
+        // Logo transition matching splash
+        Positioned(
+          top: 60,
+          right: 30,
+          child: Image.asset(
+            "assets/icons/Dressify_withName.png",
+            width: 50,
+            height: 50,
+            fit: BoxFit.contain,
+          ).animate().fadeIn(duration: 800.ms),
+        ),
+      ],
     );
   }
 }
